@@ -1,0 +1,25 @@
+namespace :slack do
+  desc 'Notify Slack of a deployment via the incoming webhooks integration - ' \
+       ':slack_subdomain and :slack_token must be set'
+  task :notify do
+    run_locally do
+      info 'Notifying Slack of deploy'
+      execute :curl, '-X POST',
+        '--data-urlencode', fetch(:slack_payload),
+        fetch(:slack_url)
+    end
+  end
+
+  after 'deploy:finished', 'slack:notify'
+end
+
+namespace :load do
+  task :defaults do
+    set :slack_channel, '#general'
+    set :slack_username, 'Capistrano'
+    set :slack_text, -> { slack_text }
+    set :slack_emoji, ':ghost:'
+    set :slack_payload, -> { "'payload=#{slack_payload}'" }
+    set :slack_url, -> { slack_url }
+  end
+end
