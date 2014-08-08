@@ -20,7 +20,7 @@ Or install it yourself as:
 
 Require the gem in your `Capfile`:
 
-    require 'capistrano/slackfiy'
+    require 'capistrano/slackify'
 
 And then set the required variables in `config/deploy.rb`:
 
