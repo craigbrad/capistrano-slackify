@@ -45,6 +45,16 @@ Any of the defaults can be over-ridden in `config/deploy.rb`:
     set :slack_username, 'Deploybot'
     set :slack_text, -> { "Uh-oh, #{local_user} just deployed" }
     set :slack_emoji, ':trollface:'
+    
+Add elapsed time to slack_text:
+
+    set :start_time, Time.now
+    set :slack_text, -> {
+      elapsed = Time.now.to_i - fetch(:start_time).to_i
+      "Revision #{fetch(:current_revision, fetch(:branch))} of " \
+      "#{fetch(:application)} deployed to #{fetch(:stage)} by #{local_user} " \
+      "in #{elapsed} seconds."
+    }
 
 ### Copyright
 
