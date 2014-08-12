@@ -35,7 +35,7 @@ The task will run automatically on deploy, or can be run manually using:
 
 By default, this will publish something along the lines of:
 
-    Revision 64a3c1de of my_app deployed to production by seenmyfate
+    Revision 64a3c1de of my_app deployed to production by seenmyfate in 333 seconds.
 
 ###  Customisation
 
@@ -43,20 +43,18 @@ Any of the defaults can be over-ridden in `config/deploy.rb`:
 
     set :slack_channel, '#devops'
     set :slack_username, 'Deploybot'
-    set :slack_text, -> { "Uh-oh, #{local_user} just deployed" }
     set :slack_emoji, ':trollface:'
-    
-Add elapsed time to slack_text:
-
-    set :start_time, Time.now
+    set :slack_user, ENV['GIT_AUTHOR_NAME']
     set :slack_text, -> {
-      elapsed = Time.now.to_i - fetch(:start_time).to_i
       "Revision #{fetch(:current_revision, fetch(:branch))} of " \
       "#{fetch(:application)} deployed to #{fetch(:stage)} by #{local_user} " \
       "in #{elapsed} seconds."
     }
+    set :slack_deploy_starting_text, -> {  
+      "Notifying Slack of #{fetch(:stage)} deploy starting with revision/branch #{fetch(:current_revision, fetch(:branch))} for #{fetch(:application)}"
+    }
 
 ### Copyright
 
-Copyright (c) 2014 OnTheBeach Ltd. See LICENSE.txt for
+Copyright (c) 2014 On the Beach Holidays. See LICENSE.txt for
 further details.
