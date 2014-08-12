@@ -23,18 +23,34 @@ module Slackify
 
   module Payload
 
-    def slack_payload
-      {
+    module_function
+
+    def slack_payload(message)
+      payload = {
         channel: fetch(:slack_channel),
         username: fetch(:slack_username),
-        text: fetch(:slack_text),
+        text: message,
         icon_emoji: fetch(:slack_emoji)
       }.to_json
+      "payload='#{payload}'"
     end
 
-    def slack_text
+    def deployer
+      ENV['GIT_AUTHOR_NAME'] || `git config user.name`.chomp || local_user
+    end
+
+    def time_elapsed
+      Time.now.to_i - fetch(:slack_start_time).to_i
+    end
+
+    def slack_text_started
+      "#{deployer} is deploying #{fetch(:application)} #{fetch(:branch)} to #{fetch(:stage)}..."
+    end
+
+    def slack_text_finished
       "Revision #{fetch(:current_revision, fetch(:branch))} of " \
-        "#{fetch(:application)} deployed to #{fetch(:stage)} by #{local_user}"
+        "#{fetch(:application)} deployed to #{fetch(:stage)} by #{deployer} " \
+        "in #{time_elapsed} seconds."
     end
 
     def slack_url
