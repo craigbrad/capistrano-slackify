@@ -1,25 +1,39 @@
 namespace :slack do
   desc 'Notify Slack of a deployment via the incoming webhooks integration - ' \
        ':slack_subdomain and :slack_token must be set'
-  task :notify do
+  task :notify_started do
     run_locally do
-      info 'Notifying Slack of deploy'
+      info 'Notifying Slack of deploy started'
+      set :slack_state, 'started'
       execute :curl, '-X POST',
-        '--data-urlencode', fetch(:slack_payload),
+        '--data-urlencode', Slackify::Payload.slack_payload(fetch(:slack_text_started)),
         fetch(:slack_url)
     end
   end
+  before 'deploy', 'slack:notify_started'
 
-  after 'deploy:finished', 'slack:notify'
+  desc 'Notify Slack of a deployment via the incoming webhooks integration - ' \
+       ':slack_subdomain and :slack_token must be set'
+  task :notify_finished do
+    run_locally do
+      info 'Notifying Slack of deploy finished'
+      set :slack_state, 'finished'
+      execute :curl, '-X POST',
+        '--data-urlencode', Slackify::Payload.slack_payload(fetch(:slack_text_finished)),
+        fetch(:slack_url)
+    end
+  end
+  after 'deploy:finished', 'slack:notify_finished'
 end
 
 namespace :load do
   task :defaults do
+    set :slack_start_time, Time.now
     set :slack_channel, '#general'
     set :slack_username, 'Capistrano'
-    set :slack_text, -> { slack_text }
+    set :slack_text_started, -> { slack_text_started }
+    set :slack_text_finished, -> { slack_text_finished }
     set :slack_emoji, ':ghost:'
-    set :slack_payload, -> { "'payload=#{slack_payload}'" }
     set :slack_url, -> { slack_url }
   end
 end
