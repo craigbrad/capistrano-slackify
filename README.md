@@ -43,8 +43,16 @@ Any of the defaults can be over-ridden in `config/deploy.rb`:
 
     set :slack_channel, '#devops'
     set :slack_username, 'Deploybot'
-    set :slack_text_finished, -> { "Uh-oh, #{local_user} just deployed" }
     set :slack_emoji, ':trollface:'
+    set :slack_user, ENV['GIT_AUTHOR_NAME']
+    set :slack_text, -> {
+      "Revision #{fetch(:current_revision, fetch(:branch))} of " \
+      "#{fetch(:application)} deployed to #{fetch(:stage)} by #{local_user} " \
+      "in #{elapsed} seconds."
+    }
+    set :slack_deploy_starting_text, -> {  
+      "Notifying Slack of #{fetch(:stage)} deploy starting with revision/branch #{fetch(:current_revision, fetch(:branch))} for #{fetch(:application)}"
+    }
 
 ### Copyright
 
