@@ -3,10 +3,10 @@ namespace :slack do
        ':slack_subdomain and :slack_token must be set'
   task :notify_started do
     run_locally do
-      info 'Notifying Slack of deploy started'
-      set :slack_state, 'started'
+      info 'Notifying Slack of deploy starting'
+      set :time_started, Time.now.to_i
       execute :curl, '-X POST',
-        '--data-urlencode', Slackify::Payload.slack_payload(fetch(:slack_text_started)),
+        '--data-urlencode', Slackify::Payload.build(:start),
         fetch(:slack_url)
     end
   end
@@ -17,9 +17,9 @@ namespace :slack do
   task :notify_finished do
     run_locally do
       info 'Notifying Slack of deploy finished'
-      set :slack_state, 'finished'
+      set :time_finished, Time.now.to_i
       execute :curl, '-X POST',
-        '--data-urlencode', Slackify::Payload.slack_payload(fetch(:slack_text_finished)),
+        '--data-urlencode', Slackify::Payload.build(:finish),
         fetch(:slack_url)
     end
   end
@@ -28,12 +28,19 @@ end
 
 namespace :load do
   task :defaults do
-    set :slack_start_time, Time.now
     set :slack_channel, '#general'
     set :slack_username, 'Capistrano'
-    set :slack_text_started, -> { slack_text_started }
-    set :slack_text_finished, -> { slack_text_finished }
     set :slack_emoji, ':ghost:'
-    set :slack_url, -> { slack_url }
+    set :slack_user, -> { local_user.strip }
+    set :slack_url, -> { Slackify::Configuration.instance.url }
+    set :slack_text, lambda {
+      time_elapsed = Integer(fetch(:time_finished) - fetch(:time_started))
+      "Revision #{fetch(:current_revision, fetch(:branch))} of " \
+      "#{fetch(:application)} deployed to #{fetch(:stage)} by #{fetch(:slack_user)} " \
+      "in #{time_elapsed} seconds." 
+    }
+    set :slack_deploy_starting_text, -> {  
+      "#{fetch(:stage)} deploy starting with revision/branch #{fetch(:current_revision, fetch(:branch))} for #{fetch(:application)}"
+    }
   end
 end

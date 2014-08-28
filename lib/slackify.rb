@@ -1,9 +1,9 @@
 require 'uri'
 require 'yajl/json_gem'
+require 'singleton'
+
 module Slackify
-
   class URL
-
     def initialize(subdomain, token)
       @subdomain, @token = subdomain, token
     end
@@ -21,50 +21,57 @@ module Slackify
     end
   end
 
-  module Payload
+  class Payload
 
-    module_function
+    attr_reader :status
+    protected :status
 
-    def slack_payload(message)
-      payload = {
+    def self.build(status)
+      new(status).build
+    end
+
+    def initialize(status)
+      @status = status
+    end
+
+    def build
+      "'payload=#{payload}'"
+    end
+
+    def payload
+      {
         channel: fetch(:slack_channel),
         username: fetch(:slack_username),
-        text: message,
+        text: slack_text,
         icon_emoji: fetch(:slack_emoji)
       }.to_json
-      "payload='#{payload}'"
     end
 
-    def deployer
-      ENV['GIT_AUTHOR_NAME'] || `git config user.name`.chomp || local_user
-    end
-
-    def time_elapsed
-      Time.now.to_i - fetch(:slack_start_time).to_i
-    end
-
-    def slack_text_started
-      "#{deployer} is deploying #{fetch(:application)} #{fetch(:branch)} to #{fetch(:stage)}..."
-    end
-
-    def slack_text_finished
-      "Revision #{fetch(:current_revision, fetch(:branch))} of " \
-        "#{fetch(:application)} deployed to #{fetch(:stage)} by #{deployer} " \
-        "in #{time_elapsed} seconds."
-    end
-
-    def slack_url
-      URL.new(slack_subdomain, slack_token).to_s
-    end
-
-    def slack_subdomain
-      fetch(:slack_subdomain) { fail ':slack_subdomain is not set' }
-    end
-
-    def slack_token
-      fetch(:slack_token) { fail ':slack_token is not set' }
+    def slack_text
+      if @status == :start
+        fetch(:slack_deploy_starting_text)
+      else
+        fetch(:slack_text)
+      end
     end
 
   end
+
+  class Configuration
+    include Singleton
+
+    def url
+      URL.new(subdomain, token).to_s
+    end
+
+    private
+
+    def subdomain
+      fetch(:slack_subdomain) { fail ':slack_subdomain is not set' }
+    end
+
+    def token
+      fetch(:slack_token) { fail ':slack_token is not set' }
+    end
+  end
 end
-self.extend(Slackify::Payload)
