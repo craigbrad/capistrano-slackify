@@ -44,6 +44,7 @@ Any of the defaults can be over-ridden in `config/deploy.rb`:
     set :slack_channel, '#devops'
     set :slack_username, 'Deploybot'
     set :slack_emoji, ':trollface:'
+    set :slack_parse, 'full'
     set :slack_user, ENV['GIT_AUTHOR_NAME']
     set :slack_text, -> {
       elapsed = Integer(fetch(:time_finished) - fetch(:time_started))

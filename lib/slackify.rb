@@ -43,7 +43,8 @@ module Slackify
         channel: fetch(:slack_channel),
         username: fetch(:slack_username),
         text: slack_text,
-        icon_emoji: fetch(:slack_emoji)
+        icon_emoji: fetch(:slack_emoji),
+        parse: parse
       }.to_json
     end
 
@@ -53,6 +54,10 @@ module Slackify
       else
         fetch(:slack_text)
       end
+    end
+
+    def parse
+      fetch(:slack_parse) || 'none'
     end
 
   end

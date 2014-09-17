@@ -31,6 +31,7 @@ namespace :load do
     set :slack_channel, '#general'
     set :slack_username, 'Capistrano'
     set :slack_emoji, ':ghost:'
+    set :slack_parse, 'none'
     set :slack_user, -> { local_user.strip }
     set :slack_url, -> { Slackify::Configuration.instance.url }
     set :slack_text, lambda {
