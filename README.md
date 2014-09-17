@@ -44,7 +44,6 @@ Any of the defaults can be over-ridden in `config/deploy.rb`:
     set :slack_channel, '#devops'
     set :slack_username, 'Deploybot'
     set :slack_emoji, ':trollface:'
-    set :slack_parse, 'full'
     set :slack_user, ENV['GIT_AUTHOR_NAME']
     set :slack_text, -> {
       elapsed = Integer(fetch(:time_finished) - fetch(:time_started))
@@ -55,6 +54,10 @@ Any of the defaults can be over-ridden in `config/deploy.rb`:
     set :slack_deploy_starting_text, -> {  
       "#{fetch(:stage)} deploy starting with revision/branch #{fetch(:current_revision, fetch(:branch))} for #{fetch(:application)}"
     }
+
+To configure the way slack parses your message (see 'Parsing Modes' at https://api.slack.com/docs/formatting) use the `:slack_parse` setting:
+
+  set :slack_parse, 'none' # available options: 'default', 'none', 'full'
 
 ### Copyright
 
