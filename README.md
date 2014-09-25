@@ -29,9 +29,14 @@ And then set the required variables in `config/deploy.rb`:
 
 Ensure that you have enabled the [incoming webhooks integration](https://api.slack.com/).
 
-The task will run automatically on deploy, or can be run manually using:
+The task will run automatically on deploy. Alternatively, you can notify of a deploy starting manually by using:
 
-    `bundle exec cap production slack:notify`
+    `bundle exec cap production slack:notify_started`
+    
+Or to notify of a finished deploy:
+
+    `bundle exec cap production slack:notify_started`
+    
 
 By default, this will publish something along the lines of:
 
