@@ -10,7 +10,7 @@ namespace :slack do
         fetch(:slack_url)
     end
   end
-  before 'deploy', 'slack:notify_started'
+  before 'deploy:starting', 'slack:notify_started'
 
   desc 'Notify Slack of a deployment via the incoming webhooks integration - ' \
        ':slack_subdomain and :slack_token must be set'
