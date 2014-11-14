@@ -1,4 +1,4 @@
-# Capistrano Slackify [![Build Status](https://travis-ci.org/onthebeach/capistrano-slackify.svg)](https://travis-ci.org/onthebeach/capistrano-slackify)
+# Capistrano Slackify [![Build Status](https://travis-ci.org/onthebeach/capistrano-slackify.svg)](https://travis-ci.org/onthebeach/capistrano-slackify) [![Code Climate](https://codeclimate.com/github/onthebeach/capistrano-slackify/badges/gpa.svg)](https://codeclimate.com/github/onthebeach/capistrano-slackify)
 
 Publish deploy notifications to [Slack](https://slack.com) - for [Capistrano v3](https://github.com/capistrano/capistrano).
 
