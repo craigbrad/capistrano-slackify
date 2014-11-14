@@ -1,37 +1,17 @@
-require 'uri'
 require 'yajl/json_gem'
-require 'singleton'
 
 module Slackify
-  class URL
-    def initialize(subdomain, token)
-      @subdomain, @token = subdomain, token
-    end
-
-    def to_s
-      uri.to_s
-    end
-
-    private
-
-    def uri
-      @uri ||= URI(
-        "https://#{@subdomain}.slack.com/services/hooks/incoming-webhook?token=#{@token}"
-      )
-    end
-  end
-
   class Payload
 
     attr_reader :status
     protected :status
 
-    def self.build(status)
-      new(status).build
+    def initialize(context, status)
+      @context, @status = context, status
     end
 
-    def initialize(status)
-      @status = status
+    def self.build(context, status)
+      new(context, status).build
     end
 
     def build
@@ -56,23 +36,9 @@ module Slackify
       end
     end
 
-  end
-
-  class Configuration
-    include Singleton
-
-    def url
-      URL.new(subdomain, token).to_s
+    def fetch(*args, &block)
+      @context.fetch(*args, &block)
     end
 
-    private
-
-    def subdomain
-      fetch(:slack_subdomain) { fail ':slack_subdomain is not set' }
-    end
-
-    def token
-      fetch(:slack_token) { fail ':slack_token is not set' }
-    end
   end
 end

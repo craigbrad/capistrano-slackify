@@ -1,22 +1,40 @@
 require 'spec_helper'
 
 module Slackify
-  describe URL do
-    let(:url) { URL.new(subdomain, token) }
-    let(:subdomain) { 'me' }
-    let(:token) { 'abc123' }
+  describe Payload do
+    describe '.build' do
+      let(:context) {
+        {
+          slack_channel: '#general',
+          slack_username:'Capistrano',
+          slack_emoji: ':ghost:',
+          slack_parse: 'default',
+          slack_user: 'You',
+          slack_text: ':boom:',
+          slack_deploy_starting_text: 'duck!'
+        }
+      }
 
-    describe '.new' do
-      it 'takes a subdomain and a token' do
-        expect(url)
-      end
-    end
+      context 'when starting' do
+        let(:payload) {
+          %{'payload={"channel":"#general","username":"Capistrano","text":"duck!","icon_emoji":":ghost:","parse":"default"}'}
+        }
 
-    describe '#to_s' do
-      it 'returns the url as a string' do
-        expect(url.to_s).
-          to eq 'https://me.slack.com/services/hooks/incoming-webhook?token=abc123'
+        it 'returns the starting payload' do
+          expect(Payload.build(context, :start)).to eq payload
+        end
       end
+
+      context 'when finishing' do
+        let(:payload) {
+          %{'payload={"channel":"#general","username":"Capistrano","text":":boom:","icon_emoji":":ghost:","parse":"default"}'}
+        }
+
+        it 'returns the finishing payload' do
+          expect(Payload.build(context, :finish)).to eq payload
+        end
+      end
+
     end
   end
 end
