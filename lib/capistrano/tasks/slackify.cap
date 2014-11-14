@@ -6,7 +6,7 @@ namespace :slack do
       info 'Notifying Slack of deploy starting'
       set :time_started, Time.now.to_i
       execute :curl, '-X POST',
-        '--data-urlencode', Slackify::Payload.build(:start),
+        '--data-urlencode', Slackify::Payload.build(self, :start),
         fetch(:slack_url)
     end
   end
@@ -19,7 +19,7 @@ namespace :slack do
       info 'Notifying Slack of deploy finished'
       set :time_finished, Time.now.to_i
       execute :curl, '-X POST',
-        '--data-urlencode', Slackify::Payload.build(:finish),
+        '--data-urlencode', Slackify::Payload.build(self, :finish),
         fetch(:slack_url)
     end
   end
@@ -33,14 +33,14 @@ namespace :load do
     set :slack_emoji, ':ghost:'
     set :slack_parse, 'default'
     set :slack_user, -> { local_user.strip }
-    set :slack_url, -> { Slackify::Configuration.instance.url }
+    set :slack_url, -> { fail ':slack_url is not set' }
     set :slack_text, lambda {
       time_elapsed = Integer(fetch(:time_finished) - fetch(:time_started))
       "Revision #{fetch(:current_revision, fetch(:branch))} of " \
       "#{fetch(:application)} deployed to #{fetch(:stage)} by #{fetch(:slack_user)} " \
-      "in #{time_elapsed} seconds." 
+      "in #{time_elapsed} seconds."
     }
-    set :slack_deploy_starting_text, -> {  
+    set :slack_deploy_starting_text, -> {
       "#{fetch(:stage)} deploy starting with revision/branch #{fetch(:current_revision, fetch(:branch))} for #{fetch(:application)}"
     }
   end

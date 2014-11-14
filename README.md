@@ -1,4 +1,4 @@
-# Capistrano Slackify [![Build Status](https://travis-ci.org/onthebeach/capistrano-slackify.svg)](https://travis-ci.org/onthebeach/capistrano-slackify)
+# Capistrano Slackify [![Build Status](https://travis-ci.org/onthebeach/capistrano-slackify.svg)](https://travis-ci.org/onthebeach/capistrano-slackify) [![Code Climate](https://codeclimate.com/github/onthebeach/capistrano-slackify/badges/gpa.svg)](https://codeclimate.com/github/onthebeach/capistrano-slackify)
 
 Publish deploy notifications to [Slack](https://slack.com) - for [Capistrano v3](https://github.com/capistrano/capistrano).
 
@@ -24,19 +24,18 @@ Require the gem in your `Capfile`:
 
 And then set the required variables in `config/deploy.rb`:
 
-    set :slack_subdomain, 'my_slack_subdomain'
-    set :slack_token, 'my_slack_token'
+    set :slack_url, 'https://hooks.slack.com/services/your/webhook/url'
 
-Ensure that you have enabled the [incoming webhooks integration](https://api.slack.com/).
+Ensure that you have enabled the [incoming webhooks integration](https://api.slack.com/) -
+copy/paste the webhook url provided in the setup instructions.
 
 The task will run automatically on deploy. Alternatively, you can notify of a deploy starting manually by using:
 
-    `bundle exec cap production slack:notify_started`
-    
+    bundle exec cap production slack:notify_started
+
 Or to notify of a finished deploy:
 
-    `bundle exec cap production slack:notify_started`
-    
+    bundle exec cap production slack:notify_started
 
 By default, this will publish something along the lines of:
 
@@ -56,7 +55,7 @@ Any of the defaults can be over-ridden in `config/deploy.rb`:
       "#{fetch(:application)} deployed to #{fetch(:stage)} by #{fetch(:slack_user)} " \
       "in #{elapsed} seconds."
     }
-    set :slack_deploy_starting_text, -> {  
+    set :slack_deploy_starting_text, -> {
       "#{fetch(:stage)} deploy starting with revision/branch #{fetch(:current_revision, fetch(:branch))} for #{fetch(:application)}"
     }
 
