@@ -35,7 +35,7 @@ The task will run automatically on deploy. Alternatively, you can notify of a de
 
 Or to notify of a finished deploy:
 
-    bundle exec cap production slack:notify_started
+    bundle exec cap production slack:notify_finished
 
 By default, this will publish something along the lines of:
 
