@@ -29,8 +29,11 @@ module Slackify
     end
 
     def slack_text
-      if @status == :start
+      case status
+      when :start
         fetch(:slack_deploy_starting_text)
+      when :fail
+        fetch(:slack_deploy_failed_text)
       else
         fetch(:slack_text)
       end

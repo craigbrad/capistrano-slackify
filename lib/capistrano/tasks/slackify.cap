@@ -24,6 +24,19 @@ namespace :slack do
     end
   end
   after 'deploy:finished', 'slack:notify_finished'
+
+  desc 'Notify Slack of a deployment failure via the incoming webhooks ' \
+       'integration - :slack_subdomain and :slack_token must be set'
+  task :notify_failed do
+    run_locally do
+      info 'Notifying Slack of deploy failed'
+      set :time_finished, Time.now.to_i
+      execute :curl, '-X POST',
+        '--data-urlencode', Slackify::Payload.build(self, :fail),
+        fetch(:slack_url)
+    end
+  end
+  after 'deploy:failed', 'slack:notify_failed'
 end
 
 namespace :load do
@@ -42,6 +55,9 @@ namespace :load do
     }
     set :slack_deploy_starting_text, -> {
       "#{fetch(:stage)} deploy starting with revision/branch #{fetch(:current_revision, fetch(:branch))} for #{fetch(:application)}"
+    }
+    set :slack_deploy_failed_text, -> {
+      "#{fetch(:stage)} deploy of #{fetch(:application)} with revision/branch #{fetch(:current_revision, fetch(:branch))} failed"
     }
   end
 end

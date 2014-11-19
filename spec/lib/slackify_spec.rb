@@ -11,7 +11,8 @@ module Slackify
           slack_parse: 'default',
           slack_user: 'You',
           slack_text: ':boom:',
-          slack_deploy_starting_text: 'duck!'
+          slack_deploy_starting_text: 'duck!',
+          slack_deploy_failed_text: ':red_circle:',
         }
       }
 
@@ -32,6 +33,16 @@ module Slackify
 
         it 'returns the finishing payload' do
           expect(Payload.build(context, :finish)).to eq payload
+        end
+      end
+
+      context 'when failing' do
+        let(:payload) {
+          %{'payload={"channel":"#general","username":"Capistrano","text":":red_circle:","icon_emoji":":ghost:","parse":"default"}'}
+        }
+
+        it 'returns the failing payload' do
+          expect(Payload.build(context, :fail)).to eq payload
         end
       end
 
