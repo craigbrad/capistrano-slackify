@@ -6,7 +6,7 @@ Publish deploy notifications to [Slack](https://slack.com) - for [Capistrano v3]
 
 Add this line to your application's Gemfile:
 
-    gem 'capistrano-slackify'
+    gem 'capistrano-slackify', require: false
 
 And then execute:
 
