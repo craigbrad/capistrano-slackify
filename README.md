@@ -61,7 +61,7 @@ Any of the defaults can be over-ridden in `config/deploy.rb`:
 
 To configure the way slack parses your message (see 'Parsing Modes' at https://api.slack.com/docs/formatting) use the `:slack_parse` setting:
 
-  set :slack_parse, 'none' # available options: 'default', 'none', 'full'
+    set :slack_parse, 'none' # available options: 'default', 'none', 'full'
 
 ### Copyright
 
