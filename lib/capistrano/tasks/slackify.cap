@@ -5,8 +5,8 @@ namespace :slack do
     run_locally do
       info 'Notifying Slack of deploy starting'
       set :time_started, Time.now.to_i
-      execute :curl, '-X POST',
-        '--data-urlencode', Slackify::Payload.build(self, :start),
+      execute :curl, '-X POST', '--data-urlencode',
+        Slackify::Payload.build(self, fetch(:slack_deploy_starting_text)),
         fetch(:slack_url)
     end
   end
@@ -18,8 +18,8 @@ namespace :slack do
     run_locally do
       info 'Notifying Slack of deploy finished'
       set :time_finished, Time.now.to_i
-      execute :curl, '-X POST',
-        '--data-urlencode', Slackify::Payload.build(self, :finish),
+      execute :curl, '-X POST', '--data-urlencode',
+        Slackify::Payload.build(self, fetch(:slack_text)),
         fetch(:slack_url)
     end
   end
@@ -31,8 +31,8 @@ namespace :slack do
     run_locally do
       info 'Notifying Slack of deploy failed'
       set :time_finished, Time.now.to_i
-      execute :curl, '-X POST',
-        '--data-urlencode', Slackify::Payload.build(self, :fail),
+      execute :curl, '-X POST', '--data-urlencode',
+        Slackify::Payload.build(self, fetch(:slack_deploy_failed_text)),
         fetch(:slack_url)
     end
   end

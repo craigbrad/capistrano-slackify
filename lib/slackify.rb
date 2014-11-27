@@ -3,15 +3,15 @@ require 'yajl/json_gem'
 module Slackify
   class Payload
 
-    attr_reader :status
-    protected :status
+    attr_reader :text
+    protected :text
 
-    def initialize(context, status)
-      @context, @status = context, status
+    def initialize(context, text)
+      @context, @text = context, text
     end
 
-    def self.build(context, status)
-      new(context, status).build
+    def self.build(context, text)
+      new(context, text).build
     end
 
     def build
@@ -22,21 +22,10 @@ module Slackify
       {
         channel: fetch(:slack_channel),
         username: fetch(:slack_username),
-        text: slack_text,
+        text: text,
         icon_emoji: fetch(:slack_emoji),
         parse: fetch(:slack_parse)
       }.to_json
-    end
-
-    def slack_text
-      case status
-      when :start
-        fetch(:slack_deploy_starting_text)
-      when :fail
-        fetch(:slack_deploy_failed_text)
-      else
-        fetch(:slack_text)
-      end
     end
 
     def fetch(*args, &block)
