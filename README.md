@@ -41,6 +41,14 @@ By default, this will publish something along the lines of:
 
     Revision 64a3c1de of my_app deployed to production by seenmyfate in 333 seconds.
 
+If a deploy has failed, the following message will be published by default:
+
+    production deploy of my_app with revision/branch 64a3c1de failed
+
+As with the other tasks, it is also possible to notify failures manually:
+
+    bundle exec cap production slack:notify_failed
+
 ###  Customisation
 
 Any of the defaults can be over-ridden in `config/deploy.rb`:
@@ -57,6 +65,9 @@ Any of the defaults can be over-ridden in `config/deploy.rb`:
     }
     set :slack_deploy_starting_text, -> {
       "#{fetch(:stage)} deploy starting with revision/branch #{fetch(:current_revision, fetch(:branch))} for #{fetch(:application)}"
+    }
+    set :slack_deploy_failed_text, -> {
+      "#{fetch(:stage)} deploy of #{fetch(:application)} with revision/branch #{fetch(:current_revision, fetch(:branch))} failed"
     }
 
 To configure the way slack parses your message (see 'Parsing Modes' at https://api.slack.com/docs/formatting) use the `:slack_parse` setting:
