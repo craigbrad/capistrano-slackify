@@ -1,4 +1,4 @@
-require 'yajl/json_gem'
+require 'multi_json'
 
 module Slackify
   class Payload
@@ -19,13 +19,13 @@ module Slackify
     end
 
     def payload
-      {
+      MultiJson.dump({
         channel: fetch(:slack_channel),
         username: fetch(:slack_username),
         text: text,
         icon_emoji: fetch(:slack_emoji),
         parse: fetch(:slack_parse)
-      }.to_json
+      })
     end
 
     def fetch(*args, &block)
