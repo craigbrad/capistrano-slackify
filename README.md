@@ -69,6 +69,8 @@ Any of the defaults can be over-ridden in `config/deploy.rb`:
     set :slack_deploy_failed_text, -> {
       "#{fetch(:stage)} deploy of #{fetch(:application)} with revision/branch #{fetch(:current_revision, fetch(:branch))} failed"
     }
+    set :slack_deploy_finished_color, 'good'
+    set :slack_deploy_failed_color, 'danger'
 
 To configure the way slack parses your message (see 'Parsing Modes' at https://api.slack.com/docs/formatting) use the `:slack_parse` setting:
 
