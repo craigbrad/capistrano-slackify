@@ -30,7 +30,7 @@ namespace :slack do
         default[:attachments] = [
           {
             fallback: text,
-            color: '#439FE0',
+            color: fetch(:slack_deploy_finished_color),
             text: text,
             fields: [
               {
@@ -78,7 +78,7 @@ namespace :slack do
         default[:attachments] = [
           {
             fallback: text,
-            color: 'danger',
+            color: fetch(:slack_deploy_failed_color),
             text: text,
             fields: [
               {
@@ -134,5 +134,7 @@ namespace :load do
     set :slack_deploy_failed_text, -> {
       "deploy of #{fetch(:application)}"
     }
+    set :slack_deploy_finished_color, 'good'
+    set :slack_deploy_failed_color, 'danger'
   end
 end
