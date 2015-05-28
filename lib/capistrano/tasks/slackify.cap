@@ -26,7 +26,36 @@ namespace :slack do
       set :time_finished, Time.now.to_i
 
       payload = Slackify::Payload.build self do |default, context|
-        default[:text] = fetch(:slack_text)
+        text = fetch(:slack_text)
+        default[:attachments] = [
+          {
+            fallback: text,
+            color: '#439FE0',
+            text: text,
+            fields: [
+              {
+                title: 'Status',
+                value: 'success',
+                short: true
+              },
+              {
+                title: 'Stage',
+                value: fetch(:stage),
+                short: true
+              },
+              {
+                title: 'Branch',
+                value: fetch(:branch),
+                short: true
+              },
+              {
+                title: 'Revision',
+                value: fetch(:current_revision),
+                short: true
+              },
+            ]
+          }
+        ]
         default
       end
 
@@ -96,8 +125,7 @@ namespace :load do
     set :slack_url, -> { fail ':slack_url is not set' }
     set :slack_text, lambda {
       time_elapsed = Integer(fetch(:time_finished) - fetch(:time_started))
-      "Revision #{fetch(:current_revision, fetch(:branch))} of " \
-      "#{fetch(:application)} deployed to #{fetch(:stage)} by #{fetch(:slack_user)} " \
+      "#{fetch(:application)} deployed by #{fetch(:slack_user)} " \
       "in #{time_elapsed} seconds."
     }
     set :slack_deploy_starting_text, -> {
