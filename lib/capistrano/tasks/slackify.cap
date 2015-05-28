@@ -50,7 +50,29 @@ namespace :slack do
           {
             fallback: text,
             color: 'danger',
-            text: text
+            text: text,
+            fields: [
+              {
+                title: 'Status',
+                value: 'failed',
+                short: true
+              },
+              {
+                title: 'Stage',
+                value: fetch(:stage),
+                short: true
+              },
+              {
+                title: 'Branch',
+                value: fetch(:branch),
+                short: true
+              },
+              {
+                title: 'Revision',
+                value: fetch(:current_revision),
+                short: true
+              },
+            ]
           }
         ]
         default
@@ -82,7 +104,7 @@ namespace :load do
       "#{fetch(:stage)} deploy starting with revision/branch #{fetch(:current_revision, fetch(:branch))} for #{fetch(:application)}"
     }
     set :slack_deploy_failed_text, -> {
-      "#{fetch(:stage)} deploy of #{fetch(:application)} with revision/branch #{fetch(:current_revision, fetch(:branch))} failed"
+      "deploy of #{fetch(:application)}"
     }
   end
 end
