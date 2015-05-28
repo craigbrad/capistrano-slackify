@@ -3,29 +3,28 @@ require 'multi_json'
 module Slackify
   class Payload
 
-    attr_reader :text
-    protected :text
-
-    def initialize(context, text)
-      @context, @text = context, text
+    def initialize(context)
+      @context = context
     end
 
-    def self.build(context, text)
-      new(context, text).build
+    def self.build(context, &block)
+      new(context).build(&block)
     end
 
-    def build
-      "'payload=#{payload}'"
+    def build(&block)
+      "'payload=#{payload(&block)}'"
     end
 
-    def payload
-      MultiJson.dump({
+    def payload(&block)
+      default = {
         channel: fetch(:slack_channel),
         username: fetch(:slack_username),
-        text: text,
         icon_emoji: fetch(:slack_emoji),
         parse: fetch(:slack_parse)
-      })
+      }
+
+      json = yield(default, @context)
+      MultiJson.dump(json)
     end
 
     def fetch(*args, &block)

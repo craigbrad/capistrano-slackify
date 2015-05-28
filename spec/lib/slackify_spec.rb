@@ -15,13 +15,20 @@ module Slackify
       }
 
       let(:payload) {
-        %{'payload={"channel":"#general","username":"Capistrano","text":":boom:","icon_emoji":":ghost:","parse":"default"}'}
+        %{'payload={"channel":"#general","username":"Capistrano","icon_emoji":":ghost:","parse":"default","text":":boom:"}'}
       }
 
       let(:text) { context.fetch(:slack_text) }
 
+      let(:builded_payload) {
+        Payload.build context do |default, context|
+          default[:text] = text
+          default
+        end
+      }
+
       it 'returns the payload with the specified text' do
-        expect(Payload.build(context, text)).to eq payload
+        expect(builded_payload).to eq payload
       end
 
     end
