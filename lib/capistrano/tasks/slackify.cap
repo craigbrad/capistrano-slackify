@@ -45,7 +45,14 @@ namespace :slack do
       set :time_finished, Time.now.to_i
 
       payload = Slackify::Payload.build self do |default, context|
-        default[:text] = fetch :slack_deploy_failed_text
+        text = fetch :slack_deploy_failed_text
+        default[:attachments] = [
+          {
+            fallback: text,
+            color: 'danger',
+            text: text
+          }
+        ]
         default
       end
 
