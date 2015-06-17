@@ -11,20 +11,21 @@ module Slackify
           slack_parse: 'default',
           slack_user: 'You',
           slack_text: ':boom:',
+          slack_deploy_finished_color: 'good',
+          stage: 'sandbox',
+          branch: 'master',
+          current_revision: 'SHA',
         }
       }
 
       let(:payload) {
-        %{'payload={"channel":"#general","username":"Capistrano","icon_emoji":":ghost:","parse":"default","text":":boom:"}'}
+        %{'payload={"channel":"#general","username":"Capistrano","icon_emoji":":ghost:","parse":"default","attachments":[{"fallback":":boom:","color":"good","text":":boom:","fields":[{"title":"Status","value":"success","short":true},{"title":"Stage","value":"sandbox","short":true},{"title":"Branch","value":"master","short":true},{"title":"Revision","value":"SHA","short":true}]}]}'}
       }
 
       let(:text) { context.fetch(:slack_text) }
 
       let(:builded_payload) {
-        Payload.build context do |default, context|
-          default[:text] = text
-          default
-        end
+        Payload.build(context, :success)
       }
 
       it 'returns the payload with the specified text' do

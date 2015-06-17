@@ -6,42 +6,8 @@ namespace :slack do
       info 'Notifying Slack of deploy starting'
       set :time_started, Time.now.to_i
 
-      payload = Slackify::Payload.build self do |default, context|
-        text = fetch(:slack_deploy_starting_text)
-        default[:attachments] = [
-          {
-            fallback: text,
-            color: fetch(:slack_deploy_starting_color),
-            text: text,
-            fields: [
-              {
-                title: 'Status',
-                value: 'starting',
-                short: true
-              },
-              {
-                title: 'Stage',
-                value: fetch(:stage),
-                short: true
-              },
-              {
-                title: 'Branch',
-                value: fetch(:branch),
-                short: true
-              },
-              {
-                title: 'Revision',
-                value: fetch(:current_revision),
-                short: true
-              },
-            ]
-          }
-        ]
-        default
-      end
-
       execute :curl, '-X POST', '--data-urlencode',
-        payload,
+        Slackify::Payload.build(self, :starting),
         fetch(:slack_url)
     end
   end
@@ -54,42 +20,8 @@ namespace :slack do
       info 'Notifying Slack of deploy finished'
       set :time_finished, Time.now.to_i
 
-      payload = Slackify::Payload.build self do |default, context|
-        text = fetch(:slack_text)
-        default[:attachments] = [
-          {
-            fallback: text,
-            color: fetch(:slack_deploy_finished_color),
-            text: text,
-            fields: [
-              {
-                title: 'Status',
-                value: 'success',
-                short: true
-              },
-              {
-                title: 'Stage',
-                value: fetch(:stage),
-                short: true
-              },
-              {
-                title: 'Branch',
-                value: fetch(:branch),
-                short: true
-              },
-              {
-                title: 'Revision',
-                value: fetch(:current_revision),
-                short: true
-              },
-            ]
-          }
-        ]
-        default
-      end
-
       execute :curl, '-X POST', '--data-urlencode',
-        payload,
+        Slackify::Payload.build(self, :success),
         fetch(:slack_url)
     end
   end
@@ -102,42 +34,8 @@ namespace :slack do
       info 'Notifying Slack of deploy failed'
       set :time_finished, Time.now.to_i
 
-      payload = Slackify::Payload.build self do |default, context|
-        text = fetch :slack_deploy_failed_text
-        default[:attachments] = [
-          {
-            fallback: text,
-            color: fetch(:slack_deploy_failed_color),
-            text: text,
-            fields: [
-              {
-                title: 'Status',
-                value: 'failed',
-                short: true
-              },
-              {
-                title: 'Stage',
-                value: fetch(:stage),
-                short: true
-              },
-              {
-                title: 'Branch',
-                value: fetch(:branch),
-                short: true
-              },
-              {
-                title: 'Revision',
-                value: fetch(:current_revision),
-                short: true
-              },
-            ]
-          }
-        ]
-        default
-      end
-
       execute :curl, '-X POST', '--data-urlencode',
-        payload,
+        Slackify::Payload.build(self, :failed),
         fetch(:slack_url)
     end
   end
