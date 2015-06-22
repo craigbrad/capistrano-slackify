@@ -3,12 +3,15 @@ namespace :slack do
        ':slack_subdomain and :slack_token must be set'
   task :notify_started do
     run_locally do
-      info 'Notifying Slack of deploy starting'
       set :time_started, Time.now.to_i
 
-      execute :curl, '-X POST', '--data-urlencode',
-        Slackify::Payload.build(self, :starting),
-        fetch(:slack_url)
+      if fetch(:slack_notify_events).include? :started
+        info 'Notifying Slack of deploy starting'
+
+        execute :curl, '-X POST', '--data-urlencode',
+          Slackify::Payload.build(self, :starting),
+          fetch(:slack_url)
+      end
     end
   end
   before 'deploy:starting', 'slack:notify_started'
@@ -17,12 +20,15 @@ namespace :slack do
        ':slack_subdomain and :slack_token must be set'
   task :notify_finished do
     run_locally do
-      info 'Notifying Slack of deploy finished'
       set :time_finished, Time.now.to_i
 
-      execute :curl, '-X POST', '--data-urlencode',
-        Slackify::Payload.build(self, :success),
-        fetch(:slack_url)
+      if fetch(:slack_notify_events).include? :finished
+        info 'Notifying Slack of deploy finished'
+
+        execute :curl, '-X POST', '--data-urlencode',
+          Slackify::Payload.build(self, :success),
+          fetch(:slack_url)
+      end
     end
   end
   after 'deploy:finished', 'slack:notify_finished'
@@ -31,12 +37,15 @@ namespace :slack do
        'integration - :slack_subdomain and :slack_token must be set'
   task :notify_failed do
     run_locally do
-      info 'Notifying Slack of deploy failed'
       set :time_finished, Time.now.to_i
 
-      execute :curl, '-X POST', '--data-urlencode',
-        Slackify::Payload.build(self, :failed),
-        fetch(:slack_url)
+      if fetch(:slack_notify_events).include? :failed
+        info 'Notifying Slack of deploy failed'
+
+        execute :curl, '-X POST', '--data-urlencode',
+          Slackify::Payload.build(self, :failed),
+          fetch(:slack_url)
+      end
     end
   end
   after 'deploy:failed', 'slack:notify_failed'
@@ -66,5 +75,6 @@ namespace :load do
     set :slack_deploy_starting_color, 'warning'
     set :slack_deploy_finished_color, 'good'
     set :slack_deploy_failed_color, 'danger'
+    set :slack_notify_events, [:started, :finished, :failed]
   end
 end
