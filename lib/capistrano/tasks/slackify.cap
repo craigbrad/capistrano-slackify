@@ -4,6 +4,7 @@ namespace :slack do
   task :notify_started do
     run_locally do
       set :time_started, Time.now.to_i
+      set :release_hosts, release_roles(:all).map(&:hostname).join("\n")
 
       if fetch(:slack_notify_events).include? :started
         info 'Notifying Slack of deploy starting'
