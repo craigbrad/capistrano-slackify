@@ -49,6 +49,11 @@ module Slackify
                   value: fetch(:current_revision),
                   short: true
                 },
+                {
+                  title: 'Hosts',
+                  value: fetch(:release_hosts),
+                  short: true
+                },
               ]
             }
           ]
