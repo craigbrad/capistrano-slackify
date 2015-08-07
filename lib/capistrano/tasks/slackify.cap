@@ -4,7 +4,6 @@ namespace :slack do
   task :notify_started do
     run_locally do
       set :time_started, Time.now.to_i
-      set :release_hosts, release_roles(:all).map(&:hostname).join("\n")
 
       if fetch(:slack_notify_events).include? :started
         info 'Notifying Slack of deploy starting'
@@ -59,6 +58,7 @@ namespace :load do
     set :slack_emoji, ':ghost:'
     set :slack_parse, 'default'
     set :slack_user, -> { local_user.strip }
+    set :slack_hosts, -> { release_roles(:all).map(&:hostname).join("\n") }
     set :slack_url, -> { fail ':slack_url is not set' }
     set :slack_text, lambda {
       time_elapsed = Integer(fetch(:time_finished) - fetch(:time_started))

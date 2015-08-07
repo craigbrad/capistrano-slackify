@@ -10,12 +10,12 @@ module Slackify
           slack_emoji: ':ghost:',
           slack_parse: 'default',
           slack_user: 'You',
+          slack_hosts: "192.168.10.1\r192.168.10.2",
           slack_text: ':boom:',
           slack_deploy_finished_color: 'good',
           stage: 'sandbox',
           branch: 'master',
           current_revision: 'SHA',
-          release_hosts: "192.168.10.1\r192.168.10.2",
         }
       }
 

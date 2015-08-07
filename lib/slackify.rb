@@ -51,7 +51,7 @@ module Slackify
                 },
                 {
                   title: 'Hosts',
-                  value: fetch(:release_hosts),
+                  value: fetch(:slack_hosts),
                   short: true
                 },
               ]
