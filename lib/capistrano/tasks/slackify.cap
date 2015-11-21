@@ -55,6 +55,7 @@ namespace :load do
   task :defaults do
     set :slack_channel, '#general'
     set :slack_username, 'Capistrano'
+    set :slack_icon_url, ''
     set :slack_emoji, ':ghost:'
     set :slack_parse, 'default'
     set :slack_user, -> { local_user.strip }

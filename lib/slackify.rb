@@ -21,6 +21,7 @@ module Slackify
         {
           channel: fetch(:slack_channel),
           username: fetch(:slack_username),
+          icon_url: fetch(:slack_icon_url),
           icon_emoji: fetch(:slack_emoji),
           parse: fetch(:slack_parse),
           attachments: [
