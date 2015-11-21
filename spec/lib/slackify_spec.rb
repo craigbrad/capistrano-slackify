@@ -7,6 +7,7 @@ module Slackify
         {
           slack_channel: '#general',
           slack_username:'Capistrano',
+          slack_icon_url: "",
           slack_emoji: ':ghost:',
           slack_parse: 'default',
           slack_user: 'You',
@@ -20,7 +21,7 @@ module Slackify
       }
 
       let(:payload) {
-        %{'payload={"channel":"#general","username":"Capistrano","icon_emoji":":ghost:","parse":"default","attachments":[{"fallback":":boom:","color":"good","text":":boom:","fields":[{"title":"Status","value":"success","short":true},{"title":"Stage","value":"sandbox","short":true},{"title":"Branch","value":"master","short":true},{"title":"Revision","value":"SHA","short":true},{"title":"Hosts","value":"192.168.10.1\\r192.168.10.2","short":true}]}]}'}
+        %{'payload={"channel":"#general","username":"Capistrano","icon_url":"","icon_emoji":":ghost:","parse":"default","attachments":[{"fallback":":boom:","color":"good","text":":boom:","fields":[{"title":"Status","value":"success","short":true},{"title":"Stage","value":"sandbox","short":true},{"title":"Branch","value":"master","short":true},{"title":"Revision","value":"SHA","short":true},{"title":"Hosts","value":"192.168.10.1\\r192.168.10.2","short":true}]}]}'}
       }
 
       let(:text) { context.fetch(:slack_text) }

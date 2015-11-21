@@ -55,6 +55,7 @@ Any of the defaults can be over-ridden in `config/deploy.rb`:
 
     set :slack_channel, '#devops'
     set :slack_username, 'Deploybot'
+    set :slack_icon_url, 'http://gravatar.com/avatar/885e1c523b7975c4003de162d8ee8fee?r=g&s=48'
     set :slack_emoji, ':trollface:'
     set :slack_user, ENV['GIT_AUTHOR_NAME']
     set :slack_hosts, -> { release_roles(:all).map(&:hostname).join("\n") }
