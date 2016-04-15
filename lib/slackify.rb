@@ -17,6 +17,40 @@ module Slackify
     end
 
     def payload
+      fields_map = {
+        'status' => {
+          title: 'Status',
+          value: @status,
+          short: true
+        },
+        'stage' => {
+          title: 'Stage',
+          value: fetch(:stage),
+          short: true
+        },
+        'branch' => {
+          title: 'Branch',
+          value: fetch(:branch),
+          short: true
+        },
+        'revision' => {
+          title: 'Revision',
+          value: fetch(:current_revision),
+          short: true
+        },
+        'hosts' => {
+          title: 'Hosts',
+          value: fetch(:slack_hosts),
+          short: true
+        }
+      }
+
+      fields = []
+
+      fetch(:slack_fields).each { |field|
+        fields.push(fields_map[field])
+      }
+
       MultiJson.dump(
         {
           channel: fetch(:slack_channel),
@@ -28,33 +62,7 @@ module Slackify
               fallback: text,
               color: color,
               text: text,
-              fields: [
-                {
-                  title: 'Status',
-                  value: @status,
-                  short: true
-                },
-                {
-                  title: 'Stage',
-                  value: fetch(:stage),
-                  short: true
-                },
-                {
-                  title: 'Branch',
-                  value: fetch(:branch),
-                  short: true
-                },
-                {
-                  title: 'Revision',
-                  value: fetch(:current_revision),
-                  short: true
-                },
-                {
-                  title: 'Hosts',
-                  value: fetch(:slack_hosts),
-                  short: true
-                },
-              ]
+              fields: fields,
             }
           ]
         }
