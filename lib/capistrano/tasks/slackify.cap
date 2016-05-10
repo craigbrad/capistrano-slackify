@@ -62,7 +62,7 @@ namespace :load do
     set :slack_hosts, -> { release_roles(:all).map(&:hostname).join("\n") }
     set :slack_url, -> { fail ':slack_url is not set' }
     set :slack_text, lambda {
-      time_elapsed = Integer(fetch(:time_finished) - fetch(:time_started))
+      time_elapsed = Integer(fetch(:time_finished, 0) - fetch(:time_started, 0))
       "#{fetch(:application)} deploy by #{fetch(:slack_user)}: " \
       "successful in #{time_elapsed} seconds."
     }
