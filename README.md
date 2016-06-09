@@ -58,6 +58,7 @@ Any of the defaults can be over-ridden in `config/deploy.rb`:
     set :slack_emoji, ':trollface:'
     set :slack_user, ENV['GIT_AUTHOR_NAME']
     set :slack_fields, ['status', 'stage', 'branch', 'revision', 'hosts']
+    set :slack_mrkdwn_in, ['pretext', 'text', 'fields']
     set :slack_hosts, -> { release_roles(:all).map(&:hostname).join("\n") }
     set :slack_text, -> {
       elapsed = Integer(fetch(:time_finished) - fetch(:time_started))
