@@ -59,6 +59,7 @@ namespace :load do
     set :slack_parse, 'default'
     set :slack_user, -> { local_user.strip }
     set :slack_fields, ['status', 'stage', 'branch', 'revision', 'hosts']
+    set :slack_mrkdwn_in, []
     set :slack_hosts, -> { release_roles(:all).map(&:hostname).join("\n") }
     set :slack_url, -> { fail ':slack_url is not set' }
     set :slack_text, lambda {

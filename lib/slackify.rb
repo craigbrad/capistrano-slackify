@@ -63,6 +63,7 @@ module Slackify
               color: color,
               text: text,
               fields: fields,
+              mrkdwn_in: fetch(:slack_mrkdwn_in),
             }
           ]
         }
