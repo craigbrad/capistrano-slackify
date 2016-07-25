@@ -76,6 +76,32 @@ Any of the defaults can be over-ridden in `config/deploy.rb`:
     set :slack_deploy_failed_color, 'danger'
     set :slack_notify_events, [:started, :finished, :failed]
 
+You can setup custom fields by defining a mapping for how to display them in slack:
+
+    set :slack_fields, ['status', 'environment', 'docker_image']
+    # You could also add your custom mappings to the defaults with:
+    # set :slack_fields, fetch(:slack_fields).push('environment', 'docker_image')
+    set :slack_custom_field_mapping, -> {
+      {
+        'environment' => {
+          title: 'Environment',
+          value: -> {
+            if fetch(:stage) == :production
+              'production'
+            else
+              "staging-#{fetch(:staging_name)}"
+            end
+          },
+          short: true,
+        },
+        'docker_image' => {
+          title: 'Docker image',
+          value: fetch(:docker_image),
+          short: false,
+        },
+      }
+    }
+
 To configure the way slack parses your message (see 'Parsing Modes' at https://api.slack.com/docs/formatting) use the `:slack_parse` setting:
 
     set :slack_parse, 'none' # available options: 'default', 'none', 'full'
