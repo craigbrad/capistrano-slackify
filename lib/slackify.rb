@@ -17,7 +17,44 @@ module Slackify
     end
 
     def payload
-      fields_map = {
+      fields = fetch(:slack_fields).each_with_object([]) { |field, fields|
+        if fields_map[field].fetch(:value).respond_to?(:call)
+          field_data = fields_map[field]
+          field_data[:value] = field_data.fetch(:value).call
+          fields.push(field_data)
+        else
+          fields.push(fields_map[field])
+        end
+      }
+
+      MultiJson.dump(
+        {
+          channel: fetch(:slack_channel),
+          username: fetch(:slack_username),
+          icon_emoji: fetch(:slack_emoji),
+          parse: fetch(:slack_parse),
+          attachments: [
+            {
+              fallback: text,
+              color: color,
+              text: text,
+              fields: fields,
+              mrkdwn_in: fetch(:slack_mrkdwn_in),
+            }
+          ]
+        }
+      )
+    end
+
+    def fields_map
+      @fields_map ||= [
+        default_field_map,
+        fetch(:slack_custom_field_mapping),
+      ].reduce(&:merge)
+    end
+
+    def default_field_map
+      {
         'status' => {
           title: 'Status',
           value: @status,
@@ -44,30 +81,6 @@ module Slackify
           short: true
         }
       }
-
-      fields = []
-
-      fetch(:slack_fields).each { |field|
-        fields.push(fields_map[field])
-      }
-
-      MultiJson.dump(
-        {
-          channel: fetch(:slack_channel),
-          username: fetch(:slack_username),
-          icon_emoji: fetch(:slack_emoji),
-          parse: fetch(:slack_parse),
-          attachments: [
-            {
-              fallback: text,
-              color: color,
-              text: text,
-              fields: fields,
-              mrkdwn_in: fetch(:slack_mrkdwn_in),
-            }
-          ]
-        }
-      )
     end
 
     def fetch(*args, &block)
