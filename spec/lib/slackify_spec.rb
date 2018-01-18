@@ -6,7 +6,7 @@ module Slackify
       let(:context) {
         {
           slack_channel: '#general',
-          slack_username:'Capistrano',
+          slack_username: 'Capistrano',
           slack_emoji: ':ghost:',
           slack_parse: 'default',
           slack_user: 'You',
@@ -42,7 +42,11 @@ module Slackify
       let(:text) { context.fetch(:slack_text) }
 
       let(:builded_payload) {
-        Payload.build(context, :success)
+        Payload.build(context, :success, slack_channel)
+      }
+
+      let(:slack_channel) {
+        context.fetch(:slack_channel)
       }
 
       it 'returns the payload with the specified text' do

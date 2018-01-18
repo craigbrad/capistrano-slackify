@@ -7,10 +7,11 @@ namespace :slack do
 
       if fetch(:slack_notify_events).include? :started
         info 'Notifying Slack of deploy starting'
-
-        execute :curl, '-X POST', '-s', '--data-urlencode',
-          Slackify::Payload.build(self, :starting),
-          fetch(:slack_url)
+        Array(fetch(:slack_channel)).each {|channel|
+          execute :curl, '-X POST', '-s', '--data-urlencode',
+            Slackify::Payload.build(self, :starting, channel),
+            fetch(:slack_url)
+        }
       end
     end
   end
@@ -24,11 +25,12 @@ namespace :slack do
 
       if fetch(:slack_notify_events).include? :finished
         info 'Notifying Slack of deploy finished'
-
-        execute :curl, '-X POST', '-s', '--data-urlencode',
-          Slackify::Payload.build(self, :success),
-          fetch(:slack_url)
-      end
+        Array(fetch(:slack_channel)).each {|channel|
+          execute :curl, '-X POST', '-s', '--data-urlencode',
+            Slackify::Payload.build(self, :success, channel),
+            fetch(:slack_url)
+        }
+        end
     end
   end
   after 'deploy:finished', 'slack:notify_finished'
@@ -42,9 +44,11 @@ namespace :slack do
       if fetch(:slack_notify_events).include? :failed
         info 'Notifying Slack of deploy failed'
 
-        execute :curl, '-X POST', '-s', '--data-urlencode',
-          Slackify::Payload.build(self, :failed),
-          fetch(:slack_url)
+        Array(fetch(:slack_channel)).each {|channel|
+          execute :curl, '-X POST', '-s', '--data-urlencode',
+            Slackify::Payload.build(self, :failed, channel),
+            fetch(:slack_url)
+        }
       end
     end
   end
@@ -53,7 +57,7 @@ end
 
 namespace :load do
   task :defaults do
-    set :slack_channel, '#general'
+    set :slack_channel, ['#general']
     set :slack_username, 'Capistrano'
     set :slack_emoji, ':ghost:'
     set :slack_parse, 'default'
