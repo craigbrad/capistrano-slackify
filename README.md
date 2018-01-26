@@ -53,7 +53,7 @@ As with the other tasks, it is also possible to notify failures manually:
 
 Any of the defaults can be over-ridden in `config/deploy.rb`:
 
-    set :slack_channel, '#devops'
+    set :slack_channel, ['#devops', '#other-channel']
     set :slack_username, 'Deploybot'
     set :slack_emoji, ':trollface:'
     set :slack_user, ENV['GIT_AUTHOR_NAME']

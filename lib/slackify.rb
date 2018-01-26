@@ -8,15 +8,15 @@ module Slackify
       @status = status
     end
 
-    def self.build(context, status)
-      new(context, status).build
+    def self.build(context, status, channel)
+      new(context, status).build(channel)
     end
 
-    def build
-      "'payload=#{payload}'"
+    def build(channel)
+      "'payload=#{payload(channel)}'"
     end
 
-    def payload
+    def payload(channel)
       fields = fetch(:slack_fields).each_with_object([]) { |field, fields|
         if fields_map[field].fetch(:value).respond_to?(:call)
           field_data = fields_map[field]
@@ -29,7 +29,7 @@ module Slackify
 
       MultiJson.dump(
         {
-          channel: fetch(:slack_channel),
+          channel: channel,
           username: fetch(:slack_username),
           icon_emoji: fetch(:slack_emoji),
           parse: fetch(:slack_parse),
