@@ -60,7 +60,7 @@ namespace :load do
     set :slack_channel, ['#general']
     set :slack_username, 'Capistrano'
     set :slack_emoji, ':ghost:'
-    set :slack_parse, 'default'
+    set :slack_parse, 'full'
     set :slack_user, -> { local_user.to_s.strip }
     set :slack_fields, ['status', 'stage', 'branch', 'revision', 'hosts']
     set :slack_custom_field_mapping, {}
