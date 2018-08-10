@@ -104,7 +104,7 @@ You can setup custom fields by defining a mapping for how to display them in sla
 
 To configure the way slack parses your message (see 'Parsing Modes' at https://api.slack.com/docs/formatting) use the `:slack_parse` setting:
 
-    set :slack_parse, 'none' # available options: 'default', 'none', 'full'
+    set :slack_parse, 'none' # available options: 'none', 'full'
 
 ### Copyright
 
