@@ -1,4 +1,5 @@
 require 'multi_json'
+require 'shellwords'
 
 module Slackify
   class Payload
@@ -13,7 +14,7 @@ module Slackify
     end
 
     def build(channel)
-      "'payload=#{payload(channel)}'"
+      Shellwords.escape("payload=#{payload(channel)}")
     end
 
     def payload(channel)
