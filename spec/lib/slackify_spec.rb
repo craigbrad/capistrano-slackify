@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'shellwords'
 
 module Slackify
   describe Payload do
@@ -36,7 +37,7 @@ module Slackify
       }
 
       let(:payload) {
-        %{'payload={"channel":"#general","username":"Capistrano","icon_emoji":":ghost:","parse":"full","attachments":[{"fallback":":boom:","color":"good","text":":boom:","fields":[{"title":"Status","value":"success","short":true},{"title":"Stage","value":"sandbox","short":true},{"title":"Branch","value":"master","short":true},{"title":"Revision","value":"SHA","short":true},{"title":"Hosts","value":"192.168.10.1\\r192.168.10.2","short":true},{"title":"custom title","value":"custom value","short":false},{"title":"custom title proc","value":"custom value proc","short":false}],"mrkdwn_in":["text"]}]}'}
+        Shellwords.escape(%{payload={"channel":"#general","username":"Capistrano","icon_emoji":":ghost:","parse":"full","attachments":[{"fallback":":boom:","color":"good","text":":boom:","fields":[{"title":"Status","value":"success","short":true},{"title":"Stage","value":"sandbox","short":true},{"title":"Branch","value":"master","short":true},{"title":"Revision","value":"SHA","short":true},{"title":"Hosts","value":"192.168.10.1\\r192.168.10.2","short":true},{"title":"custom title","value":"custom value","short":false},{"title":"custom title proc","value":"custom value proc","short":false}],"mrkdwn_in":["text"]}]}})
       }
 
       let(:text) { context.fetch(:slack_text) }
